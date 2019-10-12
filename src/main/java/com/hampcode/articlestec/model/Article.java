@@ -1,6 +1,7 @@
 package com.hampcode.articlestec.model;
 
 import java.util.Date;
+import java.util.Set;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -8,7 +9,11 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Lob;
+import javax.persistence.PrePersist;
 import javax.persistence.Table;
+import javax.validation.ConstraintViolation;
+import javax.validation.Validation;
+import javax.validation.ValidatorFactory;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Size;
 
@@ -54,6 +59,13 @@ public class Article extends DateAudit {
 	public Article() {
 		this.setCreatedAt(new Date());
 		this.setUpdatedAt(new Date());
+	}
+	
+	@PrePersist
+	public void prePersist() {
+		ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
+		validator = factory.getValidator();
+		Set<ConstraintViolation<Article>> violations = validator.validate(Article);
 	}
 
 	public Article(@Size(min = 2, max = 100) String title, @NotEmpty String category, @NotEmpty String author,

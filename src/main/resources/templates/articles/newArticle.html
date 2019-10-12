@@ -21,13 +21,14 @@
 						<form th:object="${article}" th:action="@{/articles/create}"
 							th:method="post">
 							
-							<div class="alert alert-danger" th:if="${error!=null}"
-								th:text="${error}"></div>
+
 							
 							<div class="alert alert-danger" th:if="${#fields.hasErrors('*')}">
 								<p th:each="err : ${#fields.errors('*')}" th:text="${err}"></p>
 							</div>
 							
+							<div class="alert alert-danger" th:if="${error!=null}"
+								th:text="${error}"></div>
 
 							<div class="form-group">
 								<input th:field="*{author}" id="author" type="text"

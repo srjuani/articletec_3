@@ -41,6 +41,11 @@ public class HomeController {
 		return ARTICLE_VIEW;
 	}
 	
+	@GetMapping("/access-denied")
+	public String accessDenied() {
+		return "/error/access-denied";
+	}
+	
 }
 
 

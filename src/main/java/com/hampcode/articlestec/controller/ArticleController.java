@@ -2,15 +2,24 @@ package com.hampcode.articlestec.controller;
 
 import java.util.Optional;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
+import javax.validation.Valid;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.annotation.Secured;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.hampcode.articlestec.common.PageInitPagination;
+import com.hampcode.articlestec.model.Article;
 import com.hampcode.articlestec.service.ArticleService;
 
 @Controller
@@ -24,7 +33,11 @@ public class ArticleController {
 	private PageInitPagination pageInitPagination;
 	
 	protected static final String ARTICLE_VIEW_PAGE="articles/allArticles";
+	protected static final String ARTICLE_ADD_FORM_PAGE="articles/newArticle";
+	protected static final String ARTICLE_EDIT_FORM_PAGE="articles/editArticle";
+	protected static final String ARTICLE_DETAIL_PAGE="articles/showtArticle";
 	
+	@Secured({"ROLE_ADMIN","ROLE_USER"})
 	@GetMapping
 	public ModelAndView getAllArticles(@RequestParam("pageSize") 
 			Optional<Integer> pageSize,
@@ -34,4 +47,31 @@ public class ArticleController {
 		return mv;
 	}
 	
+	@Secured({"ROLE_ADMIN"})
+	@GetMapping("/new")
+	public String newArticle(Model model) {
+		model.addAttribute("article",new Article());
+		return ARTICLE_ADD_FORM_PAGE;
+	}
+	
+	@Secured({"ROLE_ADMIN"})
+	@GetMapping("/{id}")
+	public String getArticleById(@PathVariable(value="id") Long articleId, Model model) {
+		model.addAttribute("article",articleService.findById(articleId));
+		return ARTICLE_DETAIL_PAGE;
+	}
+	
+	@Secured({"ROLE_ADMIN"})
+	@PostMapping("/create")
+	public String createArticle(@Valid @ModelAttribute("article") Article article,BindingResult result,Model model,RedirectAttributes attr) {
+		if(result.hasErrors() || !articleService.titleAndAuthorValid(article)) {
+			attr.addFlashAttribute("org.springframework.validation.BindingResult.article",result);
+			attr.addFlashAttribute("article",article);
+			attr.addFlashAttribute("error","No se permiten articulos con el mismo titulo y autor");
+			return "redirect:/articles/new";
+		}
+		Article newArticle = articleService.createArticle(article);
+		model.addAttribute("atribute",newArticle);
+		return "redirect:/articles/"+newArticle.getArticleId();
+	}
 }
