@@ -35,7 +35,7 @@ public class ArticleController {
 	protected static final String ARTICLE_VIEW_PAGE="articles/allArticles";
 	protected static final String ARTICLE_ADD_FORM_PAGE="articles/newArticle";
 	protected static final String ARTICLE_EDIT_FORM_PAGE="articles/editArticle";
-	protected static final String ARTICLE_DETAIL_PAGE="articles/showtArticle";
+	protected static final String ARTICLE_DETAIL_PAGE="articles/showArticle";
 	
 	@Secured({"ROLE_ADMIN","ROLE_USER"})
 	@GetMapping
