@@ -61,13 +61,6 @@ public class Article extends DateAudit {
 		this.setUpdatedAt(new Date());
 	}
 	
-	@PrePersist
-	public void prePersist() {
-		ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
-		validator = factory.getValidator();
-		Set<ConstraintViolation<Article>> violations = validator.validate(Article);
-	}
-
 	public Article(@Size(min = 2, max = 100) String title, @NotEmpty String category, @NotEmpty String author,
 			String description, @NotEmpty String content) {
 		this.title = title;
