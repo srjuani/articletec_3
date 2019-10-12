@@ -23,6 +23,7 @@ public interface ArticleService {
     boolean titleAndAuthorValid(Article article);
 
     Page<Article> findAll( Pageable pageable);
+    List<Article> findAll();
 	
 
 }

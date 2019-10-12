@@ -63,8 +63,9 @@ public class ArticleController {
 	
 	@Secured({"ROLE_ADMIN"})
 	@PostMapping("/create")
-	public String createArticle(@Valid @ModelAttribute("article") Article article,BindingResult result,Model model,RedirectAttributes attr) {
+	public String createArticle(@Valid @ModelAttribute Article article,BindingResult result,Model model,RedirectAttributes attr) {
 		if(result.hasErrors() || !articleService.titleAndAuthorValid(article)) {
+			//System.out.println(result);
 			attr.addFlashAttribute("org.springframework.validation.BindingResult.article",result);
 			attr.addFlashAttribute("article",article);
 			attr.addFlashAttribute("error","No se permiten articulos con el mismo titulo y autor");

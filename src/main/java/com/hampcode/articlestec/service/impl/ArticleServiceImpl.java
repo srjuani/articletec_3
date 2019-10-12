@@ -86,6 +86,15 @@ public class ArticleServiceImpl implements ArticleService {
 		return articleRepository.findAll(pageable);
 	}
 
+	@Override
+	public List<Article> findAll() {
+		List<Article> articles=new ArrayList<Article>();		
+		articleRepository.findAll()
+		                 .iterator()
+		                 .forEachRemaining(articles::add);
+		return articles;
+	}
+
 	
 
 	
